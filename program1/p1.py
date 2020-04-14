@@ -2,6 +2,7 @@
 
 import argparse
 import ast
+from queue import LifoQueue, Queue
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -19,12 +20,46 @@ def read_from_file(fname:str):
     with open("./"+fname, "r") as fp:
         left = "("+fp.readline()+")"
         right = "("+fp.readline()+")"
-        return ast.literal_eval(left), ast.literal_eval(right)
+    return ast.literal_eval(left), ast.literal_eval(right)
+
+def expand(state):
+    print("incomplete: expand(state) :/")
+    return []
 
 args = get_args()
 
 initial_state = read_from_file(args.initial_state)
 goal_state = read_from_file(args.goal_state)
 
-visited_states = set(initial_state)
+#using python queue classes for consistency in gsearch algorithm :)
+#docs for these data structs: https://docs.python.org/3/library/queue.html
+if(args.mode == "bfs"):
+    frontier = Queue()
+elif (args.mode.find("dfs") != -1): #dfs or iddfs
+    frontier = LifoQueue();
+else:
+    print("need to add frontier data structure for Astar :)")
+    exit()
+
+#start gsearch psuedo code
+frontier.put(initial_state) 
+explored = set()
+
+while(1):
+    if frontier.empty():
+        #return failure
+        break
+    leaf = frontier.get()
+    if(leaf == goal_state):
+        #return solution
+        break
+    explored.add(leaf)
+    #need to define expand func: takes state, returns list of reachable states
+    reachable = expand(leaf)
+
+    for s in reachable:
+        if s not in explored and s not in frontier.queue:
+            frontier.put(s)
+    
+
 
