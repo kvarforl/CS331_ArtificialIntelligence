@@ -67,20 +67,22 @@ def graph_search(frontier, intial_state, goal_state):
     explored = set()
     cost = defaultdict(lambda: float('inf')) #use states as keys
     back = defaultdict(lambda: -1) #use states as keys
+    expand_count = 0
 
     cost[initial_state] = 0
     frontier.put(initial_state) 
     while(1):
         if frontier.empty():
             #solution not found
-            return -1, []
+            return -1,-1, []
          
         leaf = frontier.get()
         if(leaf == goal_state):
-            #return cost and path of states to get there
-            return cost[leaf], list(backtrace(back, leaf))
+            #return cost, number of expanded nodes, path of states to get there
+            return cost[leaf], expand_count, list(backtrace(back, leaf))
  
         explored.add(leaf)
+        expand_count += 1
         reachable = expand(leaf)
         for s in list(reachable):
             if cost[leaf] +1 < cost[s]:
@@ -89,6 +91,15 @@ def graph_search(frontier, intial_state, goal_state):
             if s not in explored and s not in frontier.queue:
                 frontier.put(s)
     
+def print_sol(path, cost, count, fp=None ):
+    print("Total Cost:", cost, file=fp)
+    print("# of Nodes Expanded:", count, file=fp)
+    print("Steps taken: ", file=fp)
+
+    row_format = "{:>15} {:>15}"
+    print(row_format.format("Left Bank", "Right Bank"), file=fp)
+    for l, r in path:
+        print(row_format.format(str(l), str(r)),file=fp)
 
 
 args = get_args()
@@ -101,14 +112,17 @@ goal_state = read_from_file(args.goal_state)
 if(args.mode == "bfs"):
     frontier = Queue()
 elif (args.mode.find("dfs") != -1): #dfs or iddfs
-    frontier = LifoQueue();
+    frontier = LifoQueue()
 else:
     print("need to add frontier data structure for Astar :)")
     exit()
 
-cost, path = graph_search(frontier, initial_state, goal_state)
+cost, count, path = graph_search(frontier, initial_state, goal_state)
 
-if cost == -1:
-    print("No solution found")
-else:
-    print("Cost:", cost, "Path:", path)
+with open(args.output_filename, "w") as fp:
+    if cost == -1:
+        print("No solution found")
+        fp.write("No solution found")
+    else:
+        print_sol(path, cost, count)
+        print_sol(path, cost, count, fp)
