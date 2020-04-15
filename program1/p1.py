@@ -4,7 +4,6 @@ import argparse
 import ast
 from collections import defaultdict
 from queue import LifoQueue, Queue
-from itertools import combinations
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -37,18 +36,17 @@ def expand(state):
     left, right = state
     lc, lw, lb = left
     rc, rw, rb = right
-    left_bank_animals = ["c" for _ in range(lc)] + ["w" for _ in range(lw)]
-    right_bank_animals = ["c" for _ in range(rc)] + ["w" for _ in range(rw)]
     possible_states = set()
+    all_possible_boats = ["c", ("c","c"), "w", ("w","c"), ("w","w")]
     if lb: #boat is on left
-        animals_to_move = list(set(list(combinations(left_bank_animals, 2)) + left_bank_animals))
-        for b in animals_to_move:
+        pb = [b for b in all_possible_boats if b.count("c") <= lc and b.count("w") <= lw]
+        for b in pb:
             new_left = (lc - b.count("c"), lw-b.count("w"), 0)
             new_right = (rc+b.count("c"), rw+b.count("w"), 1)
             possible_states.add((new_left, new_right))
     else: #boat is on right
-        animals_to_move = list(set(list(combinations(right_bank_animals, 2)) + right_bank_animals))
-        for b in animals_to_move:
+        pb = [b for b in all_possible_boats if b.count("c") <= rc and b.count("w") <= rw]
+        for b in pb:
             new_left = (lc + b.count("c"), lw+b.count("w"), 1)
             new_right = (rc-b.count("c"), rw-b.count("w"), 0)
             possible_states.add((new_left, new_right))
@@ -83,7 +81,6 @@ def graph_search(frontier, intial_state, goal_state):
             return cost[leaf], list(backtrace(back, leaf))
  
         explored.add(leaf)
-        #need to define expand func: takes state, returns list of reachable states 
         reachable = expand(leaf)
         for s in list(reachable):
             if cost[leaf] +1 < cost[s]:
