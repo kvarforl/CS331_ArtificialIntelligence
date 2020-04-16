@@ -63,7 +63,7 @@ def backtrace(back, start_from):
         yield curr
         curr = back[curr]
 
-def graph_search(frontier, intial_state, goal_state):
+def graph_search(frontier, intial_state, goal_state, depth_limit=-2):
     explored = set()
     cost = defaultdict(lambda: float('inf')) #use states as keys
     back = defaultdict(lambda: -1) #use states as keys
@@ -72,7 +72,7 @@ def graph_search(frontier, intial_state, goal_state):
     cost[initial_state] = 0
     frontier.put(initial_state) 
     while(1):
-        if frontier.empty():
+        if frontier.empty() or depth_limit == -1:
             #solution not found
             return -1,-1, []
          
@@ -90,6 +90,7 @@ def graph_search(frontier, intial_state, goal_state):
                 back[s] = leaf
             if s not in explored and s not in frontier.queue:
                 frontier.put(s)
+        depth_limit -= 1
     
 def print_sol(path, cost, count, fp=None ):
     print("Total Cost:", cost, file=fp)
@@ -117,7 +118,13 @@ else:
     print("need to add frontier data structure for Astar :)")
     exit()
 
-cost, count, path = graph_search(frontier, initial_state, goal_state)
+if args.mode == "iddfs":
+    for x in range(50): #unsure what to set this to. it works, but it could probably be smaller :)
+        cost, count, path = graph_search(frontier, initial_state, goal_state, x)
+        if cost != -1:
+            break
+else:
+    cost, count, path = graph_search(frontier, initial_state, goal_state)
 
 with open(args.output_filename, "w") as fp:
     if cost == -1:
