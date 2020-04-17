@@ -119,7 +119,7 @@ else:
     exit()
 
 if args.mode == "iddfs":
-    for x in range(50): #unsure what to set this to. it works, but it could probably be smaller :)
+    for x in range(750): #unsure what to set this to. it works, but it could probably be smaller :)
         cost, count, path = graph_search(frontier, initial_state, goal_state, x)
         if cost != -1:
             break
