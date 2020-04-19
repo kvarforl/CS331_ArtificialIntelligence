@@ -79,7 +79,7 @@ def graph_search(frontier, intial_state, goal_state, depth_limit=-2):
         leaf = frontier.get()
         if(leaf == goal_state):
             #return cost, number of expanded nodes, path of states to get there
-            return cost[leaf], expand_count, list(backtrace(back, leaf))
+            return cost[leaf], expand_count, reversed(list(backtrace(back, leaf)))
  
         explored.add(leaf)
         expand_count += 1
