@@ -79,7 +79,9 @@ def graph_search(frontier, intial_state, goal_state, depth_limit=-2):
         leaf = frontier.get()
         if(leaf == goal_state):
             #return cost, number of expanded nodes, path of states to get there
-            return cost[leaf], expand_count, reversed(list(backtrace(back, leaf)))
+            p = list(backtrace(back, leaf))
+            p.reverse()
+            return cost[leaf], expand_count, p
 
         explored.add(leaf)
         expand_count += 1
@@ -116,7 +118,9 @@ def astar(frontier, initial_state, goal_state):
         leaf = frontier.get()
         if(leaf[1] == goal_state):
             #return cost, number of expanded nodes, path of states to get there
-            return cost[leaf[1]], expand_count, reversed(list(a_backtrace(back, leaf)))
+            p = list(a_backtrace(back, leaf))
+            p.reverse()
+            return cost[leaf[1]], expand_count, p
 
         explored.add(leaf[1])
         expand_count += 1
