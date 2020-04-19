@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args" : ["start1.txt", "goal1.txt","bfs", "out.txt"]
+            "args" : ["start1.txt", "goal1.txt","astar", "out.txt"]
         }
     ]
 }
