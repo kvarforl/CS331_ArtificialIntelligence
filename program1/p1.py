@@ -3,7 +3,7 @@
 import argparse
 import ast
 from collections import defaultdict
-from queue import LifoQueue, Queue
+from queue import LifoQueue, Queue, PriorityQueue
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -91,7 +91,35 @@ def graph_search(frontier, intial_state, goal_state, depth_limit=-2):
             if s not in explored and s not in frontier.queue:
                 frontier.put(s)
         depth_limit -= 1
-    
+
+def astar(frontier, initial_state, goal_state):
+    explored = set()
+    cost = defaultdict(lambda: float('inf')) #use states as keys
+    back = defaultdict(lambda: -1) #use states as keys
+    expand_count = 0
+
+    cost[initial_state] = initial_state[1][0] + initial_state[1][1]
+    frontier.put((cost[initial_state], initial_state)) 
+    while(1):
+        if frontier.empty():
+            #solution not found
+            return -1,-1, []
+         
+        leaf = frontier.get()
+        if(leaf[1] == goal_state):
+            #return cost, number of expanded nodes, path of states to get there
+            return cost[leaf[1]], expand_count, list(backtrace(back, leaf[1]))
+ 
+        explored.add(leaf[1])
+        expand_count += 1
+        reachable = expand(leaf[1])
+        for s in list(reachable):
+            if cost[leaf[1]] +1 < cost[s]:
+                cost[s] = s[1][0] + s[1][1] +1
+                back[s] = leaf[1]
+            if s not in explored and s not in frontier.queue:
+                frontier.put((cost[s], s))
+
 def print_sol(path, cost, count, fp=None ):
     print("Total Cost:", cost, file=fp)
     print("# of Nodes Expanded:", count, file=fp)
@@ -112,10 +140,12 @@ goal_state = read_from_file(args.goal_state)
 #docs for these data structs: https://docs.python.org/3/library/queue.html
 if(args.mode == "bfs"):
     frontier = Queue()
+elif(args.mode == "astar"):
+    frontier = PriorityQueue()
 elif (args.mode.find("dfs") != -1): #dfs or iddfs
     frontier = LifoQueue()
 else:
-    print("need to add frontier data structure for Astar :)")
+    #print("need to add frontier data structure for Astar :)")
     exit()
 
 if args.mode == "iddfs":
@@ -123,6 +153,8 @@ if args.mode == "iddfs":
         cost, count, path = graph_search(frontier, initial_state, goal_state, x)
         if cost != -1:
             break
+elif args.mode == "astar":
+    cost, count, path = astar(frontier, initial_state, goal_state)
 else:
     cost, count, path = graph_search(frontier, initial_state, goal_state)
 
