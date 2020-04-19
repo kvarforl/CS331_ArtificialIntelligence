@@ -28,9 +28,9 @@ def state_is_legal(state):
     lc, lw, _ = left
     rc, rw, _ = right
     if (rw > rc and rc != 0) or (lw > lc and lc != 0):
-        return False 
+        return False
     else:
-        return True 
+        return True
 
 def expand(state):
     left, right = state
@@ -50,11 +50,11 @@ def expand(state):
             new_left = (lc + b.count("c"), lw+b.count("w"), 1)
             new_right = (rc-b.count("c"), rw-b.count("w"), 0)
             possible_states.add((new_left, new_right))
-            
+
     for s in list(possible_states):
         if state_is_legal(s):
             yield s
-             
+
 
 
 def backtrace(back, start_from):
@@ -70,17 +70,17 @@ def graph_search(frontier, intial_state, goal_state, depth_limit=-2):
     expand_count = 0
 
     cost[initial_state] = 0
-    frontier.put(initial_state) 
+    frontier.put(initial_state)
     while(1):
         if frontier.empty() or depth_limit == -1:
             #solution not found
             return -1,-1, []
-         
+
         leaf = frontier.get()
         if(leaf == goal_state):
             #return cost, number of expanded nodes, path of states to get there
             return cost[leaf], expand_count, reversed(list(backtrace(back, leaf)))
- 
+
         explored.add(leaf)
         expand_count += 1
         reachable = expand(leaf)
@@ -107,17 +107,17 @@ def astar(frontier, initial_state, goal_state):
 
     cost[initial_state] = 0
     heur[initial_state] = initial_state[1][0] + initial_state[1][1]
-    frontier.put((heur[initial_state], initial_state)) 
+    frontier.put((heur[initial_state], initial_state))
     while(1):
         if frontier.empty():
             #solution not found
             return -1,-1, []
-         
+
         leaf = frontier.get()
         if(leaf[1] == goal_state):
             #return cost, number of expanded nodes, path of states to get there
-            return cost[leaf[1]], expand_count, list(a_backtrace(back, leaf))
- 
+            return cost[leaf[1]], expand_count, reversed(list(a_backtrace(back, leaf)))
+
         explored.add(leaf[1])
         expand_count += 1
         reachable = expand(leaf[1])
