@@ -4,7 +4,7 @@
     If using this code please cite creator.
 
 '''
-import minimaxUtils
+from OthelloBoard import OthelloBoard #imported for static type checking
 
 class Player:
     def __init__(self, symbol):
@@ -44,8 +44,49 @@ class MinimaxPlayer(Player):
             self.oppSym = 'X'
        
     def get_move(self, board):
-        return minimaxUtils.minimax_decision(board)
-        
+        return self._minimax_decision(board)
+    
+    def _minimax_decision(self, state: OthelloBoard):
+        actions = list(state.get_legal_moves(self.symbol))
+        value = float("-inf")
+        for a in actions:
+            clone = state.cloneOBoard() #preserve initial board
+            clone.play_move(a[0], a[1], self.symbol) #generate successor
+            if(self._min_value(clone) > value): #choose action with max value
+                champ_action = a
+        return champ_action
+    
+    #assign value to terminal state( positive for symb win, - for oppsym win)  
+    def _utility(self, state: OthelloBoard):
+        xscore = state.count_score(self.symbol)
+        oscore = state.count_score(self.oppSym)
+        return xscore - oscore
+
+    #state is an othello board object
+    #maximizing player
+    def _max_value(self, state: OthelloBoard):
+        if not(state.has_legal_moves_remaining(self.symbol)):
+            return self._utility(state)
+        value = float('-inf')
+        actions = list(state.get_legal_moves(self.symbol))
+        for a in actions:
+            clone = state.cloneOBoard() #preserve initial board
+            clone.play_move(a[0], a[1], self.symbol) #generate successor
+            value = max(value, self._min_value(clone))
+        return value
+
+    #state is an othello board object
+    #minimizing player
+    def _min_value(self, state: OthelloBoard):
+        if not(state.has_legal_moves_remaining(self.oppSym)):
+            return self._utility(state)
+        value = float('inf')
+        actions = list(state.get_legal_moves(self.oppSym))
+        for a in actions:
+            clone = state.cloneOBoard() #preserve initial board
+            clone.play_move(a[0], a[1], self.oppSym) #generate successor
+            value = min(value, self._max_value(clone))
+        return value
 
                     
 
