@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
     Erich Kramer - April 2017
     Apache License

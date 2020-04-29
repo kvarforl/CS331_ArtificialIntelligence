@@ -43,6 +43,7 @@ class MinimaxPlayer(Player):
         else:
             self.oppSym = 'X'
        
+#Code from here down by me! (Lindsey Kvarfordt)
     def get_move(self, board):
         return self._minimax_decision(board)
     
