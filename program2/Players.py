@@ -4,6 +4,7 @@
     If using this code please cite creator.
 
 '''
+import minimaxUtils
 
 class Player:
     def __init__(self, symbol):
@@ -42,7 +43,11 @@ class MinimaxPlayer(Player):
         else:
             self.oppSym = 'X'
        
+    def get_move(self, board):
+        return minimaxUtils.minimax_decision(board)
         
+
+                    
 
 
 

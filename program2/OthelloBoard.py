@@ -122,6 +122,11 @@ class OthelloBoard(Board):
         self.set_cell(col, row, symbol)
         self.flip_pieces(col, row, symbol)
 
-
+    #yields lazy list of move tuples for symbol
+    def get_legal_moves(self, symbol):
+        for c in range (0, self.cols):
+            for r in range (0, self.rows):
+                if self.is_legal_move(c, r, symbol):
+                    yield (c,r)
 
 
