@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["human", "minimax"]
+            "args": ["minimax", "minimax"]
         }
     ]
 }

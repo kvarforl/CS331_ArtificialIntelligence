@@ -50,10 +50,12 @@ class MinimaxPlayer(Player):
     def _minimax_decision(self, state: OthelloBoard):
         actions = list(state.get_legal_moves(self.symbol))
         value = float("-inf")
+        champ_action = actions[0]
         for a in actions:
             clone = state.cloneOBoard() #preserve initial board
             clone.play_move(a[0], a[1], self.symbol) #generate successor
-            if(self._min_value(clone) > value): #choose action with max value
+            min_val = self._min_value(clone)
+            if(min_val > value): #choose action with max value
                 champ_action = a
         return champ_action
     
@@ -61,12 +63,18 @@ class MinimaxPlayer(Player):
     def _utility(self, state: OthelloBoard):
         xscore = state.count_score(self.symbol)
         oscore = state.count_score(self.oppSym)
-        return xscore - oscore
+        if(xscore > oscore):
+            return 1
+        elif (xscore == oscore):
+            return 0
+        else:
+            return -1
+        #return xscore - oscore
 
     #state is an othello board object
     #maximizing player
     def _max_value(self, state: OthelloBoard):
-        if not(state.has_legal_moves_remaining(self.symbol)):
+        if not(state.has_legal_moves_remaining(self.symbol)) and not(state.has_legal_moves_remaining(self.oppSym)):
             return self._utility(state)
         value = float('-inf')
         actions = list(state.get_legal_moves(self.symbol))
@@ -79,7 +87,7 @@ class MinimaxPlayer(Player):
     #state is an othello board object
     #minimizing player
     def _min_value(self, state: OthelloBoard):
-        if not(state.has_legal_moves_remaining(self.oppSym)):
+        if not(state.has_legal_moves_remaining(self.symbol)) and not(state.has_legal_moves_remaining(self.oppSym)):
             return self._utility(state)
         value = float('inf')
         actions = list(state.get_legal_moves(self.oppSym))
