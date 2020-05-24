@@ -14,4 +14,4 @@ This directory contains code for a 4x4 game of Othello, with the option of using
 
 ### [program3/](https://github.com/kvarforl/CS331_AI/tree/master/program3)
 
-This directory contains a **Binomial Naive Bayes** classifier that distinguished positive yelp reviews from negative ones. **Bag of Words** technique was implemented by me (not using sklearn's CountVectorizer, as in the machine learning multinomial naive bayes classifier found [here](https://github.com/kvarforl/CS434_MachineLearning/tree/master/implementation2)
+This directory contains a **Binomial Naive Bayes** classifier that distinguished positive yelp reviews from negative ones. **Bag of Words** technique was implemented by me (not using sklearn's CountVectorizer, as in the machine learning multinomial naive bayes classifier found [here](https://github.com/kvarforl/CS434_MachineLearning/tree/master/implementation2)).
