@@ -42,7 +42,19 @@ def output_info(bow, labels, vocab, filename):
                 print(*bow[ind], labels[ind], sep=",", file=fp)
             else:
                 print(*bow[ind], sep=",", file=fp)
-        
+    
+#function for training
+#takes training features BOW (X), training labels (Y), and optional uniform dirichlet prior value (default 1)
+#returns 2 row vectors of probabilities - [p(w0|y=0), p(w1|y=0)...], [p(w0|y=1), p(w1|y=1)...]    
+def p_words_given_class(X, y, alpha=1):
+    class1_examples = X[y==1] #positive reviews
+    class0_examples = X[y==0] #negative reviews
+    num_c1, _ = class1_examples.shape
+    num_c0, _ = class0_examples.shape
+    c1_numerator = np.sum(class1_examples, axis=0) + alpha #vector of word occurances in class 1 + alpha
+    c0_numerator = np.sum(class0_examples, axis=0) + alpha # '' in class 0 
+    return (c1_numerator/num_c1), (c0_numerator/num_c0)
+
 train, test, vocabulary = load_data()
 trainX, trainY = train
 testX, testY = test
@@ -52,5 +64,6 @@ test_bow = bag_words(testX, vocabulary)
 output_info(train_bow, trainY, vocabulary, "preprocessed_train.txt")
 output_info(test_bow, testY, vocabulary, "preprocessed_test.txt")
 
+pos_wordprobs, neg_wordprobs = p_words_given_class(train_bow, trainY)
 
 print()
