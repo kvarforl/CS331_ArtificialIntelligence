@@ -13,13 +13,14 @@ def load_data():
     train = np.array(pd.read_csv("trainingSet.txt",sep="\t"))
     test = np.array(pd.read_csv("testSet.txt",sep="\t"))
     trainX, trainy = train.T
+    testX, testy = test.T
     vocab = np.unique(clean_text(trainX))
     t = [clean_text(x) for x in trainX]
     trainX = np.array(t)
-    t = [clean_text(x) for x in test]
+    t = [clean_text(x) for x in testX]
     testX = np.array(t)
     #trainX and testX are now a jagged array of cleaned examples
-    return (trainX, trainy), testX, vocab
+    return (trainX, trainy), (testX, testy), vocab
     
 def bag_words(data, vocab):
     num_examples = data.shape[0]
@@ -44,11 +45,12 @@ def output_info(bow, labels, vocab, filename):
         
 train, test, vocabulary = load_data()
 trainX, trainY = train
+testX, testY = test
 train_bow = bag_words(trainX, vocabulary)
-test_bow = bag_words(test, vocabulary)
+test_bow = bag_words(testX, vocabulary)
 
 output_info(train_bow, trainY, vocabulary, "preprocessed_train.txt")
-output_info(test_bow,[], vocabulary, "preprocessed_test.txt")
+output_info(test_bow, testY, vocabulary, "preprocessed_test.txt")
 
 
 print()
