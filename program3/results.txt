@@ -1,0 +1,3 @@
+Results from ./trainingSet.txt and ./testSet.txt:
+	Train Accuracy: 0.9518072289156626
+	Test Accuracy: 0.7943548387096774

@@ -107,11 +107,17 @@ test_predictions = classifier.predict(testX)
 train_accuracy = accuracy_score(train_predictions,trainY)
 test_accuracy = accuracy_score(test_predictions, testY)
 
-print("Train Accuracy:", train_accuracy)
-print("Test Accuracy:", test_accuracy)
-
 output_info(classifier.train_bow, trainY, vocabulary, "preprocessed_train.txt")
 output_info(classifier.test_bow, testY, vocabulary, "preprocessed_test.txt")
+
+with open("results.txt","w") as fp:
+    print("Results from ./trainingSet.txt and ./testSet.txt:",file=fp)
+    print("\tTrain Accuracy:", train_accuracy, file=fp)
+    print("\tTest Accuracy:", test_accuracy, file=fp)
+
+print("Results from ./trainingSet.txt and ./testSet.txt:")
+print("\tTrain Accuracy:", train_accuracy)
+print("\tTest Accuracy:", test_accuracy)
 
 
 
