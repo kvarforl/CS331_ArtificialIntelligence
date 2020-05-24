@@ -21,13 +21,21 @@ def load_data():
     #trainX and testX are now a jagged array of cleaned examples
     return (trainX, trainy), testX, vocab
     
-# def bag_words(data, vocab):
-#     num_examples = data.shape[0]
-#     num_features = vocab.shape[0]
-#     matrix = np.zeros((num_examples, num_features))
-#     matrix[data in vocab] = 1
+def bag_words(data, vocab):
+    num_examples = data.shape[0]
+    num_features = vocab.shape[0]
+    #make zero matrix with numex rows and numft columns
+    matrix = np.zeros((num_examples, num_features))
+    for row_ind in range(num_examples): #for each review
+        for row_word in data[row_ind]:
+            #match vocab indexes for each word in review, and set to 1
+            matrix[row_ind][np.where(row_word==vocab)]=1
+    return matrix
   
 train, test, vocabulary = load_data()
 trainX, trainY = train
-#bag_words(trainX, vocabulary)
+train_bow = bag_words(trainX, vocabulary)
+test_bow = bag_words(test, vocabulary)
+
+
 print()
