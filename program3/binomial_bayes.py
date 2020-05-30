@@ -10,8 +10,8 @@ def clean_text(review):
     return np.array(str(review).translate(translator).lower().split())
 
 def load_data():
-    train = np.array(pd.read_csv("trainingSet.txt",sep="\t"))
-    test = np.array(pd.read_csv("testSet.txt",sep="\t"))
+    train = np.array(pd.read_csv("trainingSet.txt",sep="\t", names=["reviews","labels"]))
+    test = np.array(pd.read_csv("testSet.txt",sep="\t",names=["reviews","labels"]))
     trainX, trainy = train.T
     testX, testy = test.T
     vocab = np.unique(clean_text(trainX))
